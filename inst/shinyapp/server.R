@@ -124,14 +124,13 @@ shinyServer(function(input, output,session) {
       #make sure that there's actually text in the search query, and not empty spaces
       if(grepl("[a-zA-Z]+",input$searchQuery)){
            withProgress(message = 'Querying Pubmed', value = 0,
-                        detail="This can take a few minutes depending upon how many articles there are. This step also looks up multiple sources of information too. For about one thousand articles it can take 2 - 3 minutes to grab all the data and format it for R.",{
+                        detail="This can take a few minutes depending upon how many articles there are. For about 1000 articles it can take 2 - 3 minutes to grab all the data and format it for R.",{
              incProgress(amount = runif(1,min=0.1,max=0.4)) #doesn't do much but visually pacifying because it looks like things are happening
                           
             #creating a vector list of arguements
             searchArgs<-list(query = ifelse(is.null(input$searchQuery),NA,input$searchQuery),
                         ncbi_key = values$ncbi_key,
                         demoversion = values$demoVersion,
-                        #forceGet = input$forceGet, #forcing to get the abstracts
                         retmax = ifelse(input$retmax == "",NA,as.numeric(input$retmax)), #as numeric failure defaults to NA
                         mindate = ifelse(!input$dateRange,NA,as.character(format(input$dateRangeVal[1],"%Y/%m/%d"))),
                         maxdate = ifelse(!input$dateRange,NA,as.character(format(input$dateRangeVal[2],"%Y/%m/%d")))
@@ -141,6 +140,7 @@ shinyServer(function(input, output,session) {
             searchArgs<-searchArgs[sapply(searchArgs,function(x){!is.na(x)})]
             
             #search pubmed
+            req(input$ncbi_key) # no search without the api key allowed
             df<-tryCatch({do.call(processSearch,searchArgs)},
                          error = function(err){
                            return(NULL)
@@ -680,6 +680,7 @@ shinyServer(function(input, output,session) {
   # Have connection issues
   
   output$NCBI_key<-renderUI({
+    
     #check if a key already exists
     key_txt<-""
     if(file.exists("./usr_ncbi_key.txt")){
@@ -692,14 +693,14 @@ shinyServer(function(input, output,session) {
     
     button_txt<-ifelse(key_txt =="","Add","Change")
     title_txt<-ifelse(key_txt=="",
-                      "Pubmed limits search activity by IP address. We recommend you create an NCBI key in order to avoid disconnected dropouts. You can get more details on Adjutant github repo: https://github.com/amcrisan/Adjutant",
-                      "This is your NCBI API connection key, you can change it any time.")
+                      "Pubmed limits search activity by IP address. You can get your NCBI API key from the",  a('NCBI site', href="http://www.ncbi.nlm.nih.gov/account/")
+                      )
     
     key_ui<-div(
       br(),
       p(title_txt),
       shiny::textInput(inputId = "ncbi_key",
-                                label="NCBI API KEY:",
+                                label="NCBI API key:",
                                 value=key_txt),
       actionButton(inputId = "ncbi_key_action",label=button_txt)
   )

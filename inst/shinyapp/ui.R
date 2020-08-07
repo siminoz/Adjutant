@@ -17,27 +17,28 @@ body<-dashboardBody(
     #-------------------
     # Intro 
     #-------------------
-    tabItem(tabName = "intro", fluidPage(box(status = "primary",solidHeader = TRUE,"Adjutant is an open-source, interactive, and R-based application to support literature mining of PubMed for the purposes of conducting systematic reviews. Given a PubMed compatible search query, Adjutant will assemble a document corpus and, using unsupervised techniques, identify clusters of documents pertaining to a specific topic. To support rapid analysis of the document corpus, we have made explicit trade-offs between speed and accuracy, which are modifiable by the user, and aim to provide a “good-enough” result to support, rather than replace, a researcher’s decision making. Thus, an analysis of several thousand documents takes only a few minutes to complete, from initial query to cluster assignment, and the user can explore the document corpus via a Shiny application. Adjutant saves analytic datasets as they are derived, and these datasets are structured and compatible with each other such that users can conduct further downstream analyses that Adjutant does not explicitly support. " 
+    tabItem(tabName = "intro", fluidPage(box(status = "primary",solidHeader = TRUE,"This is an edited version of a package originally called 'Adjutant'. Here we are doing literature mining of PubMed for the purposes of conducting systematic reviews. Given a PubMed compatible search query, the algorithm will assemble a document corpus and, using unsupervised techniques, identify clusters of documents pertaining to a specific topic. To support rapid analysis of the document corpus, we have made explicit trade-offs between speed and accuracy, which are modifiable by the user, and aim to provide a “good-enough” result to support, rather than replace, a researcher’s decision making. Thus, an analysis of several thousand documents takes only a few minutes to complete, from initial query to cluster assignment. For more details on the package, please refer to the publication", 
+                                             a("PMID: 30875428", align="left", href="https://pubmed.ncbi.nlm.nih.gov/30875428/"), br(),
+                                              "This package has MIT license, which allows us to edit and use the code as we wish, free of charge, without restrictions.", br(),
+                                             "Copyright (c) 2018 Anamaria Crisan
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+                                             of this software and associated documentation files (the 'Software'), to deal
+                                             in the Software without restriction, including without limitation the rights
+                                             to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+                                             copies of the Software, and to permit persons to whom the Software is
+                                             furnished to do so, subject to the following conditions: The above copyright notice and this permission notice shall be included in all
+                                             copies or substantial portions of the Software."
                                             ))),
     
+    
+
     #-------------------
     # About 
     #-------------------
-    tabItem(tabName = "about", fluidPage(box(status = "primary",solidHeader = TRUE,"Licence: MIT Licence", 
-                                             br(),"Version 1.0", br(),"Update: 07.08.2020",br(),
-                                             "Catenion Data Science Unit ", br(), "Publication can be found on Pubmed", 
-                                             a("PMID: 30875428", align="left", href="https://pubmed.ncbi.nlm.nih.gov/30875428/")))),
+    tabItem(tabName = "about", fluidPage(box(status = "primary",solidHeader = TRUE, 
+                                             "Version 1.0", br(),"Update: 07.08.2020",br(),
+                                             "Catenion Data Science Unit ", br()))),
 
-#    tabItem("about",
-#      h2("Adjutant: support for systematic reviews"),
-#      p(HTML("<strong>Search and analyze PubMed results from R</strong><br>")),
-#      hr(),
-#      p("Adjutant is an open-source, interactive, and R-based application to support literature mining of PubMed for the purposes of conducting systematic reviews. Given a PubMed compatible search query, Adjutant will assemble a document corpus and, using unsupervised techniques, identify clusters of documents pertaining to a specific topic. To support rapid analysis of the document corpus, we have made explicit trade-offs between speed and accuracy, which are modifiable by the user, and aim to provide a “good-enough” result to support, rather than replace, a researcher’s decision making. Thus, an analysis of several thousand documents takes only a few minutes to complete, from initial query to cluster assignment, and the user can explore the document corpus via a Shiny application. Adjutant saves analytic datasets as they are derived, and these datasets are structured and compatible with each other such that users can conduct further downstream analyses that Adjutant does not explicitly support. "),
-#      br(),
-#      p("Adjutant uses MIT Licence"),
-#      br(),
-#      p("Catenion has edited the code")
-#    ),
   
     #-------------------
     # Search Input 
@@ -79,8 +80,7 @@ body<-dashboardBody(
                  conditionalPanel("input.dateRange == true",
                                   dateRangeInput("dateRangeVal",label="Specify a Date Range for articles")
                  )
-                 #,
-                 #checkboxInput("forceGet","Attempt to get missing abstracts? (Search takes longer)",value=FALSE)
+                
                )
         ),
         column(6,
@@ -91,6 +91,7 @@ body<-dashboardBody(
         )
       )
     ),
+
     #------------------------------
     # Search Summary & Results
     #------------------------------
@@ -147,6 +148,12 @@ body<-dashboardBody(
         )
       )
     ),
+    
+    #-------------------
+    # Author Analysis
+    #-------------------
+    tabItem("authorAnalysis"),
+    
     #-------------------
     # Topic Clustering
     #-------------------
@@ -259,6 +266,7 @@ sideDash<-dashboardSidebar(
     menuItem("Search", tabName = "searchIn", icon = icon("search")),
     menuItem("Search Results", tabName = "searchOverview", icon = icon("book")),
     menuItem("Topic Discovery", tabName = "clusterAnalysis",icon = icon("spinner")),
+    menuItem("Author Analysis", tabName = "authorAnalysis",icon = icon("user")),
     #menuItem("Sample Articles", tabName = "docSample",icon=icon("clone")),
     menuItem("Clear Analysis", tabName = "clearAnalysis",icon=icon("ban", class="ban2")),
     menuItem("About", tabName = "about", icon = icon("info-circle"))
@@ -270,7 +278,7 @@ sideDash<-dashboardSidebar(
 #-------------------------------------------------------------------------
 
 dashboardPage(
-  dashboardHeader(title="Adjutant"),
+  dashboardHeader(title="Bibliometrix"),
   sideDash,
   body,
   skin="black"
